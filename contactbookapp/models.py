@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, Transactions
 
 # Create your models here.
 class Member(models.Model):
@@ -15,25 +15,26 @@ class Member(models.Model):
     created_on = models.DateTimeField(default = datetime.datetime.now, blank=True)
 
     def membereditfunction(self, location_id = None, new_value='', action=None):
+        '''Function used for editing PhoneBook'''
         member = self
-
-        if action == EDIT_OPTION['Member Email Edit']:
-            member.email = new_value
-        elif action == EDIT_OPTION['Member phone Edit']:
-            member.phoneno = new_value
-        elif action == EDIT_OPTION['Member name Edit']:
-            member.name = new_value
-        member.save()
-        else:
-            if not location_id:
-                messages.error("Sorry operation unsuccessful. Please select members location")
+        with Transactions.atomic:
+            if action == EDIT_OPTION['Member Email Edit']:
+                member.email = new_value
+            elif action == EDIT_OPTION['Member phone Edit']:
+                member.phoneno = new_value
+            elif action == EDIT_OPTION['Member name Edit']:
+                member.name = new_value
+            member.save()
             else:
-                location = Location.objects.get(id=location_id)
-                if action == EDIT_OPTION['Member contact_area Edit']:
-                    location.contact_area = new_value
-                elif action == EDIT_OPTION['Member contact_address Edit']:
-                    location.contact_address = new_value
-                location.save()
+                if not location_id:
+                    messages.error("Sorry operation unsuccessful. Please select members location")
+                else:
+                    location = Location.objects.get(id=location_id)
+                    if action == EDIT_OPTION['Member contact_area Edit']:
+                        location.contact_area = new_value
+                    elif action == EDIT_OPTION['Member contact_address Edit']:
+                        location.contact_address = new_value
+                    location.save()
 
 class Location(models.Model):
     contact_address = models.CharField(("House no & details"), max_length=250)

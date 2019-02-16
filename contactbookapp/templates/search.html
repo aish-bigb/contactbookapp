@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <title>{{title}}</title>
+    </head>
+    <body>
+        {% if not members %}
+        <form action="" method="POST" onsubmit="return validate_form(this)">
+            {% csrf_token %}
+            
+            <input type="submit" value="Submit form">
+            <table>
+                    <tr>
+                            <td>
+                                    phone no: <input type="text" name="phoneno" value="John"><br>
+                                    
+                            </td>
+                            <td>
+                                    email: <input type="text" name="email" value="Doe"><br>
+                            </td>
+                        </tr>
+                        <input type="submit" value="Submit form">
+                </table>
+            </form>
+
+        {% else %}
+            <ul>
+                    {% for member  in members %}
+                        <li>
+                            {{location.member.name}}
+
+                        </li>
+                        <li>
+                            {{location.member.phone_number}}
+                                
+                        </li>
+                        {% endfor %}
+                        {% for location in locations%}
+                        <li>
+                                {{location.contact_address}}
+                                    
+                        </li>
+                        <li>
+                                {{location.contact_area}}
+                                    
+                        </li>
+                        <li>
+                                {{location.pincode}}
+                                    
+                        </li>
+                    {% endfor %}
+
+            </ul>
+        </body>
+</html>
+
